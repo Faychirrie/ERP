@@ -71,14 +71,15 @@ class _HomePageState extends State<HomePage> {
                       physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (BuildContext context, int innerIndex) {
                         return Container(
+                            width:MediaQuery.of(context).size.width * 0.3,
                           child: Row(children: <Widget>[
                             SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.3),
+                                width: MediaQuery.of(context).size.width * 0.4),
                             InkWell(
                                 child: Container(
                                   height: 30.0,
                                   width:
-                                      MediaQuery.of(context).size.width * 0.5,
+                                      MediaQuery.of(context).size.width * 0.3,
                                   decoration: BoxDecoration(
                                     border: Border(
                                       bottom: BorderSide(
@@ -202,8 +203,10 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.white,
       body: container,
       drawer: Drawer(
+        width:MediaQuery.of(context).size.width * 0.75,
         child: SingleChildScrollView(
           child: Container(
+            width: MediaQuery.of(context).size.width * 0.5,
             child: Column(
               children: [
                 MyHeaderDrawer(
@@ -214,7 +217,7 @@ class _HomePageState extends State<HomePage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.4,),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.2,),
                     Text("Logout"),
                     IconButton(
                         onPressed: () async {

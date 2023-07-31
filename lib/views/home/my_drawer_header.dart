@@ -17,6 +17,7 @@ class _MyHeaderDrawerState extends State<MyHeaderDrawer> {
       color: Colors.purple,
       width: double.infinity,
       height: height*0.25,
+
       padding: EdgeInsets.only(top: 20.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
