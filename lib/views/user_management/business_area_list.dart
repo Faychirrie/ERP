@@ -1,30 +1,39 @@
-
+import 'package:crm/models/user_management/business_area_model.dart';
 import 'package:flutter/material.dart';
 import '../../controllers/online_crud_operations/human_resource_online_crud.dart';
-import '../../models/common/string_select_data.dart';
-import '../../models/human_resource/employee_master_model.dart';
+import '../../controllers/online_crud_operations/user_management_online_crud.dart';
+import '../../models/common/int_select_data.dart';
+import '../../models/human_resource/leave_type_category_model.dart';
 import '../home/home_page.dart';
 
-class EmployeeListPage extends StatefulWidget {
-  EmployeeListPage({Key? key, required this.title, required this.select})
+class BusinessAreaListPage extends StatefulWidget {
+  BusinessAreaListPage(
+      {Key? key,
+        required this.title,
+        required this.select, required this.items,
+        })
       : super(key: key);
   final String title;
   final bool select;
+  final bool items;
   @override
-  _EmployeeListPageState createState() => _EmployeeListPageState();
+  _BusinessAreaListPageState createState() => _BusinessAreaListPageState();
 }
 
-class _EmployeeListPageState extends State<EmployeeListPage> {
-  List<EmployeeMasterList> employeeList = [];
-  int count = 0;
+class _BusinessAreaListPageState extends State<BusinessAreaListPage> {
+  List<BusinessAreaList>? businessAreaList = [];
+  int? count;
   bool _search = false;
+  @override
+  void initState() {
+    updateListView(0, "");
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    if (employeeList.isEmpty) {
-      updateListView(0, "");
-    }
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -96,19 +105,21 @@ class _EmployeeListPageState extends State<EmployeeListPage> {
         ],
         // automaticallyImplyLeading: false,
       ),
-      body:this.employeeList.length>0? SafeArea(
+      body: this.businessAreaList!.length > 0
+          ? SafeArea(
         child: Column(children: [
           Expanded(
               child: Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
                   ),
-                  child: this.employeeList.length > 0
+                  child: this.businessAreaList!.length > 0
                       ? Scrollbar(
                       child: ListView.builder(
                           padding: const EdgeInsets.all(8),
                           itemCount: count,
-                          itemBuilder: (BuildContext context, int index) {
+                          itemBuilder:
+                              (BuildContext context, int index) {
                             return Column(
                               children: [
                                 Material(
@@ -116,25 +127,24 @@ class _EmployeeListPageState extends State<EmployeeListPage> {
                                     shadowColor: Colors.purple,
                                     child: GestureDetector(
                                       onTap: () {
-                                        String vempCode = "";
-                                        String vempName = "";
-                                        vempCode =
-                                        employeeList![index].vemp_code!;
-                                        vempName =
-                                        employeeList![index]
-                                            .vemp_name!;
+                                        int ibusinessAreaId = 0;
+                                        String vbusinessAreaName = "";
+                                        if (businessAreaList![index].ibusinessAreaId! >
+                                            0) {
+                                          ibusinessAreaId =
+                                          businessAreaList![index]
+                                              .ibusinessAreaId!;
+                                          vbusinessAreaName =
+                                          businessAreaList![index].vbusinessAreaName!;
+                                        }
                                         if (widget.select) {
                                           Navigator.of(context).pop(
-                                              StringSelectData(vempCode,
-                                                  vempName));
+                                              IntSelectData(ibusinessAreaId,
+                                                  vbusinessAreaName, ""));
                                         }
                                       },
                                       child: ListTile(
-                                 
-                                        title: Text(
-                                            '${employeeList![index].vemp_name}'),
-                                        // subtitle:Text('Item description $status'),
-
+                                        title: Text('${businessAreaList![index].vbusinessAreaName}'),
                                       ),
                                     )),
                                 SizedBox(
@@ -149,24 +159,22 @@ class _EmployeeListPageState extends State<EmployeeListPage> {
           // // color: Colors.white,
         ]),
         // ),
-      ):Center(
-    child: CircularProgressIndicator(
-    valueColor:
-    AlwaysStoppedAnimation<Color>(Color(0xff880e4f)),
-    ),
-    ),
-
+      )
+          : Center(
+        child:count==null? CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Color(0xff880e4f)),
+        ):Text("No Records Found"),
+      ),
     );
   }
 
-  void updateListView(int id, String vempName) async {
-    /*--- Get Agent List Online-----*/
-    await getEmployeeList(vempName).then((value) {
+  void updateListView(int id, String vbusinessAreaName) async {
+    /*--- Get Bussiness Area List Online-----*/
+    await getBussinessAreaList(vbusinessAreaName).then((value) {
       setState(() {
-        this.employeeList = value!.employeeMasterList!;
-        this.count = employeeList.length;
+        this.businessAreaList = value!.businessAreaList!;
+        this.count = businessAreaList!.length;
       });
     });
-
   }
 }

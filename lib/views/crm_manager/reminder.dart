@@ -1,6 +1,7 @@
 import 'package:crm/views/crm_manager/Note.dart';
 import 'package:crm/views/crm_manager/reminder_creation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 import '../../controllers/online_crud_operations/crm_online_crud.dart';
 import '../../models/common/int_select_data.dart';
@@ -114,6 +115,9 @@ class _ReminderPageState extends State<ReminderPage> {
                           isChecked = value!;
                           if (isChecked) {
                             reminder.creminderStatus = 'D';
+                            var myFormat = DateFormat('d/MM/yyyy');
+                            String vreminderDate= myFormat.format(DateFormat("d/MM/yyyy").parse(reminder?.dnextActivityDate??""));
+                            reminder.dnextActivityDate=vreminderDate;
                             addReminders(reminder);
                           }
                         });
@@ -354,6 +358,7 @@ class _ReminderPageState extends State<ReminderPage> {
         this.reminderList = value!.remiderList!;
         if (reminderList != null && reminderList!.length > 0) {
           this.reminder = reminderList![0];
+          this.reminder.dnextActivityDate= this.reminder.vnextActivityDate!;
           this.iactivity_mode= reminderList![0].iactivityMode;
           if (reminderList![0].creminderStatus == "D") {
             isChecked = true;

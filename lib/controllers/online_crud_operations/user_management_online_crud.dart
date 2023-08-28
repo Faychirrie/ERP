@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/Home/menu_model.dart';
+import '../../models/user_management/business_area_model.dart';
 import '../../models/user_management/city_model.dart';
 import '../../models/user_management/country_model.dart';
 
@@ -74,6 +75,32 @@ Future<CountryModel?> getCountryList(String vcountryName) async {
   if (response.statusCode == 200) {
     String responseString = response.body;
     final dataModel = CountryModel.fromJson(jsonDecode(responseString));
+    return dataModel;
+  }
+}
+Future<BusinessAreaModel?> getBussinessAreaList(String vleaveCategoryName) async {
+  final SharedPreferences sharedPreferences =
+  await SharedPreferences.getInstance();
+  var authToken = sharedPreferences.get("authToken");
+  var vempCode = sharedPreferences.get("vempCode");
+  var url = sharedPreferences.get("url");
+  print(url);
+  final msg = jsonEncode(
+      { "vemp_code":"$vempCode"});
+  var response = await http.post(
+    Uri.parse("$url/umc/getListOfBusinessArea"),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'x-auth-token': '$authToken',
+    },
+    body: msg,
+  );
+  print("===========Business Area List=======");
+  print(response.statusCode);
+  print(response.body);
+  if (response.statusCode == 200) {
+    String responseString = response.body;
+    final dataModel = BusinessAreaModel.fromJson(jsonDecode(responseString));
     return dataModel;
   }
 }

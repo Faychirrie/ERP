@@ -14,6 +14,7 @@ import '../../models/crm/customer_visit_note_master_model.dart';
 import '../../models/crm/enquiry_generation_master_model.dart';
 import '../../models/crm/enquiry_reminders_master_model.dart';
 import '../../models/crm/enquiry_source_model.dart';
+import '../../models/crm/investor_detail_model.dart';
 import '../../models/crm/lead_qualification_master_model.dart';
 import '../../models/crm/payment_terms_master_model.dart';
 import '../../models/crm/property_booking_agent_model.dart';
@@ -696,5 +697,30 @@ Future<int?> getFireBaseToken(String vempCode) async {
     } else {
       return 0;
     }
+  }
+}
+
+Future<InvestorDetailModel?> getInvestorList(String vcustomer_name,String vplant_code) async {
+  final SharedPreferences sharedPreferences =
+  await SharedPreferences.getInstance();
+  var authToken = sharedPreferences.get("authToken");
+  var url = sharedPreferences.get("url");
+  print(url);
+  final msg = jsonEncode(
+      {"vcustomer_name": "$vcustomer_name", "vplant_code": "$vplant_code"});
+  var response = await http.post(
+    Uri.parse("$url/crmc/getInvestorList"),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'x-auth-token': '$authToken',
+    },
+    body: msg,
+  );
+  print(response.statusCode);
+  print(response.body);
+  if (response.statusCode == 200) {
+    String responseString = response.body;
+    final dataModel = InvestorDetailModel.fromJson(jsonDecode(responseString));
+    return dataModel;
   }
 }

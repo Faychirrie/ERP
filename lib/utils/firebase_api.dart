@@ -1,4 +1,5 @@
 import 'package:crm/controllers/online_crud_operations/crm_online_crud.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,32 +14,36 @@ Future<void> handleBackgroundMessage(RemoteMessage message) async {
 }
 
 class FirebaseApi {
-  final _firebaseMessaging = FirebaseMessaging.instance;
-  Future<void> initNotifications(String ipAddress) async {
-    ipAddress= await getIpAddress();
+  Future<void> initFirebaseDetails() async {
+    await Firebase.initializeApp();
+    final _firebaseMessaging = FirebaseMessaging.instance;
     await _firebaseMessaging.requestPermission();
     final fcmToken = await _firebaseMessaging.getToken();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var vempCode = sharedPreferences.get("vempCode");
     print('token $fcmToken');
     sharedPreferences.setString('fcmToken', fcmToken!);
-    var vempCode = sharedPreferences.get("vempCode");
+    if (vempCode != null) {
+      int? id = await getFireBaseToken(vempCode.toString());
+      addFirebaseToken(id!);
+    }
+    FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
+  }
+
+  Future<void> initURLDetails(String ipAddress) async {
+    ipAddress = await getIpAddress();
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if (ipAddress == "190.100.254") {
       sharedPreferences.remove("url");
       sharedPreferences.setString("url", "http://$ipAddress.200:7227/pdilApp");
     } else {
       URLCrud urlCRUD = URLCrud();
       Future<List<URLDataModel>> urlListFuture = urlCRUD.getUrlList();
-      urlListFuture
-          .then((value) {
+      urlListFuture.then((value) {
         sharedPreferences.remove("url");
-        sharedPreferences.setString("url", value[0].vurl);});
-      }
-
-    if (vempCode != null && ipAddress!="Invalid IP Address") {
-      int? id = await getFireBaseToken(vempCode.toString());
-      addFirebaseToken(id!);
+        sharedPreferences.setString("url", value[0].vurl);
+      });
     }
-    FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
   }
 
   Future<String> getIpAddress() async {
@@ -48,15 +53,15 @@ class FirebaseApi {
     try {
       wifiName = await networkInfo.getWifiName();
       ipAddress = await networkInfo.getWifiIP();
-
     } catch (e) {
       print("Error getting IP address: $e");
     }
     print("Ip address==============");
-    print(getFirstThreePartsOfIpAddress(ipAddress??""));
+    print(getFirstThreePartsOfIpAddress(ipAddress ?? ""));
     print(wifiName);
-    return getFirstThreePartsOfIpAddress(ipAddress??"");
+    return getFirstThreePartsOfIpAddress(ipAddress ?? "");
   }
+
   String getFirstThreePartsOfIpAddress(String ipAddress) {
     List<String> parts = ipAddress.split('.');
 

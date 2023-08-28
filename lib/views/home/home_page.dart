@@ -11,7 +11,9 @@ import '../../models/common/int_select_data.dart';
 import '../../utils/firebase_api.dart';
 import '../crm_manager/enquiry_generation.dart';
 import '../crm_manager/enquiry_list.dart';
+import '../crm_manager/investor_list.dart';
 import '../crm_manager/reminder_creation.dart';
+import '../human_resource/leave_request_master.dart';
 import '../user_management/user_login.dart';
 import 'dashboard.dart';
 import 'my_drawer_header.dart';
@@ -71,7 +73,7 @@ class _HomePageState extends State<HomePage> {
                       physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (BuildContext context, int innerIndex) {
                         return Container(
-                            width:MediaQuery.of(context).size.width * 0.3,
+                          width: MediaQuery.of(context).size.width * 0.3,
                           child: Row(children: <Widget>[
                             SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.4),
@@ -120,17 +122,27 @@ class _HomePageState extends State<HomePage> {
                                             ?.trim() ==
                                         "meetingList") {
                                       currentPage = DrawerSections.meetingList;
-                                    }
-                                    else if (menuModel.menuList[index]
+                                    } else if (menuModel.menuList[index]
                                             .menuActionList[innerIndex].vfileUrl
                                             ?.trim() ==
                                         "taskList") {
                                       currentPage = DrawerSections.taskList;
-                                    }else if (menuModel.menuList[index]
+                                    } else if (menuModel.menuList[index]
                                             .menuActionList[innerIndex].vfileUrl
                                             ?.trim() ==
                                         "unitList") {
                                       currentPage = DrawerSections.unitList;
+                                    } else if (menuModel.menuList[index]
+                                            .menuActionList[innerIndex].vfileUrl
+                                            ?.trim() ==
+                                        "investorList") {
+                                      currentPage = DrawerSections.investorList;
+                                    } else if (menuModel.menuList[index]
+                                            .menuActionList[innerIndex].vfileUrl
+                                            ?.trim() ==
+                                        "leaveApplication") {
+                                      currentPage =
+                                          DrawerSections.leaveApplication;
                                     }
                                     print("----------here---------------");
                                     print(currentPage);
@@ -178,32 +190,37 @@ class _HomePageState extends State<HomePage> {
         title: 'Tasks',
         activityMode: 6,
       );
-    }
-    else if (currentPage == DrawerSections.meetingList) {
+    } else if (currentPage == DrawerSections.meetingList) {
       container = ReminderListPage(
         title: 'Meetings',
         activityMode: 3,
       );
-    }  else if (currentPage == DrawerSections.unitList) {
-      container = PropertyListPage(title: 'Unit List', select: false, units: true,
+    } else if (currentPage == DrawerSections.unitList) {
+      container = PropertyListPage(
+        title: 'Unit List',
+        select: false,
+        units: true,
+      );
+    } else if (currentPage == DrawerSections.investorList) {
+      container = InvestorListPage(
+        title: 'Investors',
+        select: false,
+        units: true,
+      );
+    } else if (currentPage == DrawerSections.leaveApplication) {
+      container = LeaveRequestMasterPage(
+        title: 'Apply Leave',
+        enquiryList: [], edit: false,
       );
     }
 
     final height = MediaQuery.of(context).size.height;
 
-    return
-        // WillPopScope(
-        // onWillPop: () async {
-        //   MoveToBackground.moveTaskToBack();
-        //   return false;
-        // },
-        // child:
-
-        Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
       body: container,
       drawer: Drawer(
-        width:MediaQuery.of(context).size.width * 0.75,
+        width: MediaQuery.of(context).size.width * 0.75,
         child: SingleChildScrollView(
           child: Container(
             width: MediaQuery.of(context).size.width * 0.5,
@@ -217,21 +234,23 @@ class _HomePageState extends State<HomePage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.2,),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.2,
+                    ),
                     Text("Logout"),
                     IconButton(
                         onPressed: () async {
-                          final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                          final SharedPreferences sharedPreferences =
+                              await SharedPreferences.getInstance();
                           sharedPreferences.clear();
-                          await Firebase.initializeApp();
-                          await FirebaseApi().initNotifications("");
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => UserLogin(
-                                    title: "User Login",
-                                  )));
-                        }, icon: Icon(Icons.arrow_forward))
+                                        title: "User Login",
+                                      )));
+                        },
+                        icon: Icon(Icons.arrow_forward))
                   ],
                 )
               ],
@@ -251,6 +270,8 @@ enum DrawerSections {
   enquiryList,
   taskList,
   unitList,
+  investorList,
+  leaveApplication,
   privacy_policy,
   send_feedback,
 }

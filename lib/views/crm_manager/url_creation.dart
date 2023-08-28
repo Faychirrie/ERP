@@ -4,6 +4,7 @@ import 'package:sqflite/sqflite.dart';
 import '../../controllers/offline_crud_operations/database_helper.dart';
 import '../../controllers/offline_crud_operations/url_crud.dart';
 import '../../models/common/url_data_model.dart';
+import '../../utils/firebase_api.dart';
 import '../user_management/user_login.dart';
 
 class UrlCreationPage extends StatefulWidget {
@@ -90,7 +91,8 @@ class _UrlCreationPageState extends State<UrlCreationPage> {
                           Icons.close,
                           color: Colors.white,
                         ),
-                        onPressed: () {
+                        onPressed: () async{
+                          await FirebaseApi().initURLDetails("");
                           moveToLogin();
                         },
                         // onPressed: () => Navigator.push(

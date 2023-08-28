@@ -51,8 +51,6 @@ String intToTimeLeft(int value) {
 
   return result;
 }
-
-
 String _convertTo24HourFormat(TimeOfDay time) {
   int hour = time.hour;
   final int minute = time.minute;

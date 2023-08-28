@@ -113,7 +113,10 @@ class _UnitListPageState extends State<UnitListPage> {
             ),
             FormHelper.dropDownWidget(context, "Filter By Status",
                 this.ccurent_status, this.statusList, (onchangeVal) {
-              this.ccurent_status = onchangeVal;
+              setState(() {
+                this.ccurent_status = onchangeVal;
+              });
+
               updateListView(widget.ipropertyId, "");
             }, (onValidate) {
               return null;
@@ -225,6 +228,8 @@ class _UnitListPageState extends State<UnitListPage> {
   void updateListView(int id, String unitName) async {
     /*--- Get Agent List Online-----*/
     await getUnitList(id, this.ccurent_status).then((value) {
+      print("ccurent_status");
+      print(ccurent_status);
       setState(() {
         this.unitList = value!.unitList!;
         this.count = unitList!.length;

@@ -17,7 +17,7 @@ import '../../models/human_resource/employee_master_model.dart';
 import '../../models/common/int_select_data.dart';
 import '../../models/property/property_master_model.dart';
 import '../home/home_page.dart';
-import '../human_resource/EmployeeList.dart';
+import '../human_resource/employee_list.dart';
 import '../property/property_list.dart';
 import '../user_management/city_list.dart';
 import '../user_management/country_list.dart';
@@ -106,6 +106,7 @@ class _EnquiryGenerationPageState extends State<EnquiryGenerationPage> {
             "${widget.enquiryList?[0].vcountryName ?? ""}(${widget.enquiryList?[0].vcountryCode ?? ""})";
         this.icountry_id = widget.enquiryList?[0].icountryId ?? 0;
         this.vtempCustomerCode= widget.enquiryList?[0].vtempCustomerCode ?? "";
+        this.vproperty_enquiry_code=widget.enquiryList?[0].vpropertyEnquiryCode ?? "";
         enquiry.vtempCustomerCode=this.vtempCustomerCode;
         vcustomer_email_address2Controller.text=widget.enquiryList?[0].vcustomerEmailAddress2 ?? "";
       }
@@ -232,8 +233,6 @@ class _EnquiryGenerationPageState extends State<EnquiryGenerationPage> {
   TextEditingController vcustomer_email_addressController =
       TextEditingController();
   TextEditingController vcustomer_email_address2Controller =
-      TextEditingController();
-  TextEditingController vproperty_enquiry_codeController =
       TextEditingController();
   TextEditingController vtemp_customer_codeController = TextEditingController();
   TextEditingController mour_offerController = TextEditingController();
@@ -1065,6 +1064,7 @@ class _EnquiryGenerationPageState extends State<EnquiryGenerationPage> {
       enquiry.inac_id= this.inacId;
       enquiry.vtax_no=this.vtaxNo;
       enquiry.icpd_id=this.icpdId;
+      enquiry.vpropertyEnquiryCode=this.vproperty_enquiry_code;
       print("Saving_________________3");
       int result = 0;
       int? response;

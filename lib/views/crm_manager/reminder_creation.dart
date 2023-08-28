@@ -46,7 +46,6 @@ class _RemindersEntryPageState extends State<RemindersEntryPage> {
   void initState() {
     leadController.text = widget.enquirySelectData.vname;
     ienquiry_id = widget.enquirySelectData.id;
-
     if (widget.reminderList.length > 0) {
       vnext_activityController.text =
           widget.reminderList?[0].vnextActivity ?? "";

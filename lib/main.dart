@@ -25,8 +25,8 @@ void main() async {
             channelDescription: "Test Notification")
       ],
       debug: true);
-  await Firebase.initializeApp();
-  await FirebaseApi().initNotifications("");
+
+  await FirebaseApi().initURLDetails("");
   runApp(MyApp());
 }
 

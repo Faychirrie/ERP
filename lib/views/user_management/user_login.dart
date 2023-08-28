@@ -11,6 +11,7 @@ import '../../controllers/online_crud_operations/crm_online_crud.dart';
 import '../../controllers/online_crud_operations/user_management_online_crud.dart';
 import '../../models/Home/menu_model.dart';
 import '../../models/common/url_data_model.dart';
+import '../../utils/firebase_api.dart';
 import '../crm_manager/url_creation.dart';
 import '../home/home_page.dart';
 
@@ -290,7 +291,8 @@ class _UserLoginState extends State<UserLogin> {
                                               "authToken", data.authToken!);
                                           int? id = await getFireBaseToken(
                                               data.vempCode!);
-                                          await addFirebaseToken(id!);
+                                          FirebaseApi().initFirebaseDetails();
+                                          // await addFirebaseToken(id!);
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
